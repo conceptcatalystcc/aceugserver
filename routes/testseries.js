@@ -1,6 +1,6 @@
 const express = require("express");
 
-const TestSeries = require("../models/testSeries");
+const TestSeries = require("../models/testseries");
 const TestSeriesEnrollments = require("../models/testSeriesEnrolments");
 const Student = require("../models/student");
 const Test = require("../models/test");
@@ -65,17 +65,17 @@ testSeriesRouter
 testSeriesRouter
   .route("/test/:testId")
   .get((req, res, next) => {
-
-      TestSeries.findById(req.params.testId).populate("tests")
-        .then(
-          (testSeriess) => {
-            res.statusCode = 200;
-            res.setHeader("Content-Type", "application/json");
-            res.json(testSeriess);
-          },
-          (err) => next(err)
-        )
-        .catch((err) => next(err));
+    TestSeries.findById(req.params.testId)
+      .populate("tests")
+      .then(
+        (testSeriess) => {
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json");
+          res.json(testSeriess);
+        },
+        (err) => next(err)
+      )
+      .catch((err) => next(err));
   })
   .post((req, res, next) => {
     const data = req.body;

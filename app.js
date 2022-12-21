@@ -17,8 +17,8 @@ const Student = require("./models/student");
 const Instructor = require("./models/instructor");
 const Resource = require("./models/resources");
 const Module = require("./models/modules");
-const Blog = require("./models/blog")
-const TestSeries = require("./models/testSeries");
+const Blog = require("./models/blog");
+const TestSeries = require("./models/testseries");
 const CourseEnrollments = require("./models/courseEnrollments");
 const Test = require("./models/test");
 
@@ -29,8 +29,8 @@ const progressRouter = require("./routes/progress");
 const testSeriesRouter = require("./routes/testseries");
 const studentRouter = require("./routes/student");
 const courseprogressRouter = require("./routes/courseProgress");
-const blogRouter = require("./routes/blog")
-const paymentRouter = require("./routes/payment")
+const blogRouter = require("./routes/blog");
+const paymentRouter = require("./routes/payment");
 
 const AdminJS = require("adminjs");
 const AdminJSExpress = require("@adminjs/express");
@@ -41,7 +41,6 @@ const Connect = require("connect-pg-simple");
 var app = express();
 
 app.use(cors());
-
 
 const DEFAULT_ADMIN = {
   email: "admin@example.com",
@@ -61,8 +60,7 @@ app.use(passport.initialize());
 const ConnectSession = Connect(session);
 const sessionStore = new ConnectSession({
   conObject: {
-    connectionString:
-    process.env.POSTGRES_CONNECTION_STRING,
+    connectionString: process.env.POSTGRES_CONNECTION_STRING,
     ssl: process.env.NODE_ENV === "production",
   },
   tableName: "session",
@@ -131,14 +129,14 @@ const adminOptions = {
     // },
     { resource: Video },
     { resource: Student },
-    {resource : TestSeries},
+    { resource: TestSeries },
     { resource: Course },
-    {resource: Blog, options: blogResourceOptions},
-    {resource: Instructor},
-    {resource: Test},
-    {resource: CourseEnrollments},
-    {resource: Resource},
-    {resource: Module},
+    { resource: Blog, options: blogResourceOptions },
+    { resource: Instructor },
+    { resource: Test },
+    { resource: CourseEnrollments },
+    { resource: Resource },
+    { resource: Module },
     { resource: Quiz, features: [importExportFeature()] },
     {
       resource: Question,
@@ -204,7 +202,6 @@ app.use(
     }),
   })
 );
-
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
