@@ -103,6 +103,22 @@ const questionResourceOptions = {
   },
 };
 
+const lessonResourceOptions = {
+  properties: {
+    text: {
+      type: "richtext",
+      custom: {
+        modules: {
+          toolbar: [
+            ["bold", "italic"],
+            ["link", "formula"],
+          ],
+        },
+      },
+    },
+  },
+};
+
 const blogResourceOptions = {
   properties: {
     body: {
@@ -131,7 +147,7 @@ const adminOptions = {
     // },
     { resource: Resource },
     { resource: Video },
-    { resource: Lesson },
+    { resource: Lesson, options: lessonResourceOptions },
     { resource: Quiz, features: [importExportFeature()] },
 
     { resource: Module },
