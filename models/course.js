@@ -49,7 +49,7 @@ const courseSchema = new Schema(
       required: true,
     },
     tags: [String],
-  days: { type: Number, required: true },
+    days: { type: Number, required: true },
     reviews: [reviewSchema],
     duration: {
       type: Number,
@@ -71,6 +71,11 @@ const courseSchema = new Schema(
       type: Boolean,
       required: true,
       default: false,
+    },
+    test_series: {
+      type: mongoose.Types.ObjectId,
+      ref: "TestSeries",
+      required: true,
     },
   },
   {

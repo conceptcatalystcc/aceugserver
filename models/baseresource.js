@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const baseOptions = {
+  discriminatorKey: "resourceType", // our discriminator key, could be anything
   timestamps: true,
 };
 
@@ -19,13 +20,10 @@ const resourcesSchema = new Schema(
       enum: ["Video", "Quiz", "Lesson"],
       required: true,
     },
-    video: { type: mongoose.Types.ObjectId, ref: "Video" },
-    lesson: { type: mongoose.Types.ObjectId, ref: "Lesson" },
-    quiz: { type: mongoose.Types.ObjectId, ref: "Quiz" },
   },
   baseOptions
 );
 
-const Resource = mongoose.model("Resource", resourcesSchema);
+const BaseResource = mongoose.model("BaseResource", resourcesSchema);
 
-module.exports = Resource;
+module.exports = BaseResource;

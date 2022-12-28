@@ -65,8 +65,13 @@ testSeriesRouter
 testSeriesRouter
   .route("/test/:testId")
   .get((req, res, next) => {
-    TestSeries.findById(req.params.testId)
-      .populate("tests")
+    Test.findById(req.params.testId)
+      .populate({
+        path: "sections",
+        populate: {
+          path: "questions",
+        },
+      })
       .then(
         (testSeriess) => {
           res.statusCode = 200;
