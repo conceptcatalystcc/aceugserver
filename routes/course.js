@@ -45,7 +45,6 @@ courseRouter
       .limit(coursePerPage)
       .populate("instructors")
       .populate("modules")
-      .populate("resources")
       .populate({ path: "modules", populate: { path: "resources" } })
       .then(
         (courses) => {
