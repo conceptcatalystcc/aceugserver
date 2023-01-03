@@ -100,6 +100,29 @@ const questionResourceOptions = {
         },
       },
     },
+    explanation: {
+      type: "richtext",
+      custom: {
+        modules: {
+          toolbar: [
+            ["bold", "italic"],
+            ["link", "formula"],
+          ],
+        },
+      },
+    },
+
+    "options.value": {
+      type: "richtext",
+      custom: {
+        modules: {
+          toolbar: [
+            ["bold", "italic"],
+            ["link", "formula"],
+          ],
+        },
+      },
+    },
   },
 };
 
