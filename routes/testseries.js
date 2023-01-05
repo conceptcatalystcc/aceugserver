@@ -4,74 +4,23 @@ const TestSeries = require("../models/testseries");
 const TestSeriesEnrollments = require("../models/testSeriesEnrolments");
 const Student = require("../models/student");
 const Test = require("../models/test");
+const TestProgress = require("../models/testProgress");
 
 const testSeriesRouter = express.Router();
 const testSeriesPerPage = 2;
 const mongoose = require("mongoose");
-const testSeriesValidator = require("../helpers/testSeriesHelpers");
-const testValidator = require("../helpers/testHelper");
 
 require("dotenv").config();
 
 //Handling Test Series
-testSeriesRouter
-  .route("/:page")
-  .get((req, res, next) => {
-    const page = req.params.page;
-    if (!page) {
-      res.send([]);
-    } else {
-      TestSeries.find({})
-        .skip(page * testSeriesPerPage)
-        .limit(testSeriesPerPage)
-        .then(
-          (testSeriess) => {
-            res.statusCode = 200;
-            res.setHeader("Content-Type", "application/json");
-            res.json(testSeriess);
-          },
-          (err) => next(err)
-        )
-        .catch((err) => next(err));
-    }
-  })
-  .post((req, res, next) => {
-    const data = req.body;
-
-    //Check if user is authorized to create a test series or not, skipped for now
-
-    //Validation of Data, Skipped for Now
-    if (!testSeriesValidator(data)) {
-      res.send("Invalid Data");
-      res.status(501);
-    }
-
-    //Creating New Test Series
-    TestSeries.create(data)
-      .then((success) => {
-        res.send(success);
-        res.status(200);
-      })
-      .catch((err) => {
-        res.send("Adding Test Series Failed");
-        res.status(501);
-      });
-  })
-  .delete((req, res, next) => {
-    //Delete a particular test series
-  });
-
-//Handling Single Tests
-testSeriesRouter
-  .route("/test/:testId")
-  .get((req, res, next) => {
-    Test.findById(req.params.testId)
-      .populate({
-        path: "sections",
-        populate: {
-          path: "questions",
-        },
-      })
+testSeriesRouter.route("/:page").get((req, res, next) => {
+  const page = req.params.page;
+  if (!page) {
+    res.send([]);
+  } else {
+    TestSeries.find({})
+      .skip(page * testSeriesPerPage)
+      .limit(testSeriesPerPage)
       .then(
         (testSeriess) => {
           res.statusCode = 200;
@@ -81,32 +30,88 @@ testSeriesRouter
         (err) => next(err)
       )
       .catch((err) => next(err));
-  })
+  }
+});
+
+//Handling Single Test Series
+testSeriesRouter.route("/singletestseries/:id").get((req, res, next) => {
+  const id = req.params.id;
+
+  TestSeries.findById(id)
+    .populate("tests")
+    .then((testSeries) => {
+      res.json(testSeries);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+//Handling Single Tests
+testSeriesRouter.route("/test/:testSeriesId/:testId").get((req, res, next) => {
+  Test.findById(req.params.testId)
+    .populate({
+      path: "sections",
+      populate: {
+        path: "questions",
+      },
+    })
+    .then(
+      (testSeriess) => {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json(testSeriess);
+      },
+      (err) => next(err)
+    )
+    .catch((err) => next(err));
+});
+
+//Creating Single Test Submission/Progress
+testSeriesRouter
+  .route("/submit-test/:testSeriesId/:testId")
   .post((req, res, next) => {
-    const data = req.body;
-
-    //Check if user is authorized to create a test or not, skipped for now
-
-    //Validation of Data, Skipped for Now
-    if (!testSeriesValidator(data)) {
-      res.send("Invalid Data");
-      res.status(501);
-    }
-
-    //Creating New Test Series
-    Test.create(data)
-      .then((success) => {
-        res.send(success);
-        res.status(200);
+    const testId = req.params.testId;
+    const answer_map = req.body.answer_map;
+    const score = 20;
+    const student = "63b67bf462f6d83a1898759f";
+    const testSeriesId = req.params.testSeriesId;
+    const time_taken = 30;
+    console.log(req.body.answer_map);
+    new TestProgress({
+      test: testId,
+      testseries: testSeriesId,
+      student: student,
+      answer_map: answer_map,
+      time_taken: time_taken,
+      score: score,
+    })
+      .save()
+      .then((savedProgress) => {
+        res.send(savedProgress);
       })
       .catch((err) => {
-        res.send("Adding Test Failed");
+        console.log(err);
         res.status(501);
+        res.send(err);
       });
-  })
-  .delete((req, res, next) => {
-    //Delete a particular test
   });
+
+//Returning Single Test Progress
+testSeriesRouter.route("/test-report/:progressId").get((req, res, next) => {
+  const progressId = req.params.progressId;
+  TestProgress.findById(req.params.progressId)
+    .populate("test")
+    .then(
+      (progress) => {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json(progress);
+      },
+      (err) => next(err)
+    )
+    .catch((err) => next(err));
+});
 
 //Handling Test Series Enrollment
 testSeriesRouter

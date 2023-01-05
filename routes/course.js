@@ -10,6 +10,7 @@ const coursePerPage = 2;
 const passport = require("passport");
 
 const mongoose = require("mongoose");
+const VerifyToken = require("../middlewares/VerifyToken");
 
 require("dotenv").config();
 

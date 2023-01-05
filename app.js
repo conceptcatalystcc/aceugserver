@@ -22,6 +22,7 @@ const Blog = require("./models/blog");
 const TestSeries = require("./models/testseries");
 const CourseEnrollments = require("./models/courseEnrollments");
 const Test = require("./models/test");
+const TestProgress = require("./models/testProgress");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -180,6 +181,7 @@ const adminOptions = {
     { resource: Test },
 
     { resource: Student },
+    { resource: TestProgress },
     { resource: Instructor },
     { resource: CourseEnrollments },
 
