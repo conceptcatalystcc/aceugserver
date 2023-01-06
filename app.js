@@ -16,6 +16,8 @@ const Course = require("./models/course");
 const Student = require("./models/student");
 const Instructor = require("./models/instructor");
 const Resource = require("./models/resources");
+const Degree = require("./models/degree");
+const thumbnail = require("./models/thumbnail");
 
 const Module = require("./models/modules");
 const Blog = require("./models/blog");
@@ -40,6 +42,7 @@ const AdminJSMongoose = require("@adminjs/mongoose");
 
 const Connect = require("connect-pg-simple");
 const Lesson = require("./models/lesson");
+const Thumbnail = require("./models/thumbnail");
 
 var app = express();
 
@@ -112,8 +115,12 @@ const questionResourceOptions = {
         },
       },
     },
+  },
+};
 
-    "options.value": {
+const lessonResourceOptions = {
+  properties: {
+    text: {
       type: "richtext",
       custom: {
         modules: {
@@ -127,9 +134,9 @@ const questionResourceOptions = {
   },
 };
 
-const lessonResourceOptions = {
+const courseResourceOptions = {
   properties: {
-    text: {
+    description: {
       type: "richtext",
       custom: {
         modules: {
@@ -176,7 +183,7 @@ const adminOptions = {
 
     { resource: Module },
     { resource: TestSeries },
-    { resource: Course },
+    { resource: Course, options: courseResourceOptions },
     { resource: Blog, options: blogResourceOptions },
     { resource: Test },
 
@@ -190,6 +197,9 @@ const adminOptions = {
       options: questionResourceOptions,
       features: [importExportFeature()],
     },
+
+    { resource: Degree },
+    { resource: Thumbnail },
   ],
 };
 

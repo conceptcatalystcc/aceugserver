@@ -17,18 +17,17 @@ const courseSchema = new Schema(
       unique: true,
     },
     thumbnail: {
+      type: mongoose.Types.ObjectId,
+      required: true,
+      ref: "Thumbnail",
+    },
+    description: {
       type: String,
       required: true,
     },
-    overview: {
-      description: {
-        type: String,
-        required: true,
-      },
-      iframe: {
-        type: String,
-        required: true,
-      },
+    iframe: {
+      type: String,
+      required: true,
     },
     modules: [
       {
@@ -43,7 +42,7 @@ const courseSchema = new Schema(
       },
     ],
     rating: { type: Number },
-    degree: { type: String, required: true },
+    degree: { type: mongoose.Types.ObjectId, required: true, ref: "Degree" },
     price: {
       type: Number,
       required: true,

@@ -14,6 +14,10 @@ const questionSchema = new Schema(
     pmarks: { type: Number, required: true },
     nmarks: { type: Number },
     options: [optionSchema],
+    difficulty: {
+      type: String,
+      enum: ["Low", "Medium", "Difficult", "Extreme"],
+    },
     tags: [String],
   },
   {

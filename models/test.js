@@ -10,9 +10,9 @@ const sectionSchema = new Schema({
 const testSchema = new Schema(
   {
     name: { type: String, required: true },
-    instructions: { type: String, required: true },
+    instructions: { type: String },
     duration: { type: Number, required: true },
-    thumbnail: { type: String, required: true },
+    thumbnail: { type: String },
     subject: String,
     tags: [String],
     category: { type: String },
