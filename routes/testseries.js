@@ -9,6 +9,8 @@ const TestProgress = require("../models/testProgress");
 const testSeriesRouter = express.Router();
 const testSeriesPerPage = 2;
 const mongoose = require("mongoose");
+const Question = require("../models/question");
+const VerifyToken = require("../middlewares/VerifyToken");
 
 require("dotenv").config();
 
@@ -48,43 +50,65 @@ testSeriesRouter.route("/singletestseries/:id").get((req, res, next) => {
 });
 
 //Handling Single Tests
-testSeriesRouter.route("/test/:testSeriesId/:testId").get((req, res, next) => {
-  Test.findById(req.params.testId)
-    .populate({
-      path: "sections",
-      populate: {
-        path: "questions",
-      },
-    })
-    .then(
-      (testSeriess) => {
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.json(testSeriess);
-      },
-      (err) => next(err)
-    )
-    .catch((err) => next(err));
-});
+testSeriesRouter
+  .route("/test/:testSeriesId/:testId")
+  .get(VerifyToken, (req, res, next) => {
+    Test.findById(req.params.testId)
+      .populate("sections")
+      .populate({
+        path: "sections",
+        populate: {
+          path: "questions",
+        },
+      })
+      .then(
+        (test) => {
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json");
+          res.send(test);
+        },
+        (err) => next(err)
+      )
+      .catch((err) => next(err));
+  });
 
+const calculateScore = (answer_map) => {
+  var score = 0;
+  answer_map.map((answer) => {
+    Question.findById(answer.question).then((question) => {
+      question.options.map((option) => {
+        if (option._id === answer.selected_option && option.correct) {
+          score = score + question.pmarks;
+          console.log("Score " + score);
+        } else if (option._id === answer.selected_option && !option.correct) {
+          score = score - question.nmarks;
+          console.log("Score " + score);
+        }
+      });
+    });
+  });
+
+  console.log(score);
+  return score;
+};
 //Creating Single Test Submission/Progress
 testSeriesRouter
   .route("/submit-test/:testSeriesId/:testId")
-  .post((req, res, next) => {
+  .post(VerifyToken, async (req, res, next) => {
     const testId = req.params.testId;
     const answer_map = req.body.answer_map;
-    const score = 20;
+
     const student = "63b67bf462f6d83a1898759f";
     const testSeriesId = req.params.testSeriesId;
     const time_taken = 30;
-    console.log(req.body.answer_map);
+
     new TestProgress({
       test: testId,
       testseries: testSeriesId,
       student: student,
       answer_map: answer_map,
       time_taken: time_taken,
-      score: score,
+      score: await calculateScore(answer_map),
     })
       .save()
       .then((savedProgress) => {
@@ -102,11 +126,26 @@ testSeriesRouter.route("/test-report/:progressId").get((req, res, next) => {
   const progressId = req.params.progressId;
   TestProgress.findById(req.params.progressId)
     .populate("test")
+    .populate({
+      path: "test",
+      populate: {
+        path: "sections",
+        populate: {
+          path: "questions",
+        },
+      },
+    })
     .then(
       (progress) => {
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.json(progress);
+        //Fetching 50 latest progress reports for this test
+        TestProgress.find({ test: progress.test._id })
+          .limit(50)
+          .then((latest_reports) => {
+            // console.log(latest_reports);
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json(progress);
+          });
       },
       (err) => next(err)
     )

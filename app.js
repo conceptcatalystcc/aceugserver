@@ -18,12 +18,15 @@ const Instructor = require("./models/instructor");
 const Resource = require("./models/resources");
 const Degree = require("./models/degree");
 const thumbnail = require("./models/thumbnail");
+const Coupon = require("./models/coupons");
+const Cart = require("./models/cart");
 
 const Module = require("./models/modules");
 const Blog = require("./models/blog");
 const TestSeries = require("./models/testseries");
 const CourseEnrollments = require("./models/courseEnrollments");
 const Test = require("./models/test");
+const TestSection = require("./models/testSection");
 const TestProgress = require("./models/testProgress");
 
 var indexRouter = require("./routes/index");
@@ -185,6 +188,7 @@ const adminOptions = {
     { resource: TestSeries },
     { resource: Course, options: courseResourceOptions },
     { resource: Blog, options: blogResourceOptions },
+    { resource: TestSection },
     { resource: Test },
 
     { resource: Student },
@@ -200,6 +204,8 @@ const adminOptions = {
 
     { resource: Degree },
     { resource: Thumbnail },
+    { resource: Coupon },
+    { resource: Cart },
   ],
 };
 

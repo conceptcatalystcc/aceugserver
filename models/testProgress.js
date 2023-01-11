@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const answerSchema = new Schema({
-  question: { type: mongoose.ObjectId },
-  selected_option: { type: mongoose.ObjectId },
+  question: { type: mongoose.ObjectId, required: true },
+  selected_option: { type: mongoose.ObjectId, required: true },
 });
 
 const testProgressSchema = new Schema(

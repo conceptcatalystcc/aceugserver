@@ -17,7 +17,7 @@ const testSchema = new Schema(
     tags: [String],
     category: { type: String },
     passing_marks: Number,
-    sections: [sectionSchema],
+    sections: { type: [mongoose.Types.ObjectId], ref: "TestSection" },
   },
   {
     timestamps: true,
