@@ -12,6 +12,7 @@ const fetching = (items) => {
   return new Promise(async (resolve, reject) => {
     try {
       var cartValue = 0;
+      console.log(items);
       for (i = 0; i < items.length; i++) {
         console.log("Mapping items");
         const testSeries = await fetchOne(items[i]);
@@ -31,6 +32,7 @@ const calculatePricing = async (req, res, next) => {
     console.log("RUnning Middleware");
 
     fetching(items).then((cartValue) => {
+      console.log("Fetched");
       console.log(cartValue);
       const cart = {
         testSeries: items

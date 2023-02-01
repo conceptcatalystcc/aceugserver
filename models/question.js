@@ -16,9 +16,9 @@ const questionSchema = new Schema(
     options: [optionSchema],
     difficulty: {
       type: String,
-      enum: ["Low", "Medium", "Difficult", "Extreme"],
     },
     tags: [String],
+    sections: [String],
   },
   {
     timestamps: true,

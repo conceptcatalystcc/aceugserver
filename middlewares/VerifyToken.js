@@ -10,7 +10,7 @@ const VerifyToken = async (req, res, next) => {
       return next();
     }
   } catch (e) {
-    return res.json({ message: "Internal Error" });
+    return res.json({ message: "Not Authenticated" });
   }
 };
 

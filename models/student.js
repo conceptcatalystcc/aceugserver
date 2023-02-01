@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const studentSchema = new Schema(
   {
     name: { type: String, required: true },
-
     email: { type: String, required: true },
     phone: { type: Number, required: true, unique: true },
     school: { type: String },
@@ -14,7 +13,8 @@ const studentSchema = new Schema(
     dob: { type: Date },
     courses_enrolled: { type: [mongoose.ObjectId], ref: "Course" },
     series_enrolled: { type: [mongoose.ObjectId], ref: "TestSeries" },
-    points: { type: Number, default: 0 },
+    doubt_points: { type: Number, default: 50 },
+    uid: { type: String },
   },
   {
     timestamps: true,

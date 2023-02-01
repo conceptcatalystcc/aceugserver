@@ -25,6 +25,7 @@ const Module = require("./models/modules");
 const Blog = require("./models/blog");
 const TestSeries = require("./models/testseries");
 const CourseEnrollments = require("./models/courseEnrollments");
+const TestSeriesEnrollments = require("./models/testSeriesEnrolments");
 const Test = require("./models/test");
 const TestSection = require("./models/testSection");
 const TestProgress = require("./models/testProgress");
@@ -195,10 +196,11 @@ const adminOptions = {
     { resource: TestProgress },
     { resource: Instructor },
     { resource: CourseEnrollments },
+    { resource: TestSeriesEnrollments },
 
     {
       resource: Question,
-      options: questionResourceOptions,
+
       features: [importExportFeature()],
     },
 
