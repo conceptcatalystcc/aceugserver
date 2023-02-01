@@ -49,7 +49,7 @@ testSeriesRouter.route("/singletestseries/:id").get((req, res, next) => {
     });
 });
 
-//Handling Single Tests
+//Handling Single Test
 testSeriesRouter
   .route("/test/:testSeriesId/:testId")
   .get(VerifyToken, (req, res, next) => {
@@ -97,18 +97,19 @@ testSeriesRouter
   .post(VerifyToken, async (req, res, next) => {
     const testId = req.params.testId;
     const answer_map = req.body.answer_map;
+    const score = req.body.score;
+    const time = req.body.time;
 
     const student = "63b67bf462f6d83a1898759f";
     const testSeriesId = req.params.testSeriesId;
-    const time_taken = 30;
 
     new TestProgress({
       test: testId,
       testseries: testSeriesId,
       student: student,
       answer_map: answer_map,
-      time_taken: time_taken,
-      score: await calculateScore(answer_map),
+      time_taken: time,
+      score: score,
     })
       .save()
       .then((savedProgress) => {
