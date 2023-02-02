@@ -91,6 +91,7 @@ const calculateScore = (answer_map) => {
   console.log(score);
   return score;
 };
+
 //Creating Single Test Submission/Progress
 testSeriesRouter
   .route("/submit-test/:testSeriesId/:testId")
@@ -100,7 +101,7 @@ testSeriesRouter
     const score = req.body.score;
     const time = req.body.time;
 
-    const student = "63b67bf462f6d83a1898759f";
+    const student = req.student._id;
     const testSeriesId = req.params.testSeriesId;
 
     new TestProgress({
@@ -113,7 +114,21 @@ testSeriesRouter
     })
       .save()
       .then((savedProgress) => {
-        res.send(savedProgress);
+        //Updating TestSeriesEnrollment
+        TestSeriesEnrollments.findOne({
+          student: student,
+          testSeriesId: testSeriesId,
+        }).then((enrollment) => {
+          console.log(savedProgress._id);
+          enrollment.test_progress.push({
+            test: testId,
+            test_progress: savedProgress._id,
+          });
+
+          enrollment.save().then(() => {
+            res.send(savedProgress);
+          });
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -152,72 +167,5 @@ testSeriesRouter.route("/test-report/:progressId").get((req, res, next) => {
     )
     .catch((err) => next(err));
 });
-
-//Handling Test Series Enrollment
-testSeriesRouter
-  .route("/enroll/:testSeriesId/student/:studentId")
-  .get((req, res, next) => {
-    res.send("ok");
-  })
-  .post((req, res, next) => {
-    const testSeriesId = req.params.testSeriesId;
-    const studentId = req.params.studentId;
-
-    //Checking if user is already enrolled
-    let check = TestSeriesEnrollments.exists({
-      student: studentId,
-      testseries: testSeriesId,
-    });
-
-    if (!check) {
-      //validating if Test Series Exist
-      TestSeries.findById(testSeriesId)
-        .then((testSeries) => {
-          //Checking if student exists
-          Student.findById(studentId)
-            .then((student) => {
-              //Creating a Test Series Enrollment
-
-              var join_date = new Date();
-              var last_date = new Date();
-              last_date.setDate(join_date.getDate() + testSeries.days);
-              const newEnrollment = {
-                testseries: mongoose.Types.ObjectId(testSeriesId),
-                student: mongoose.Types.ObjectId(studentId),
-                join_date: join_date,
-                last_date: last_date,
-                test_progress: [],
-              };
-
-              TestSeriesEnrollments.create(newEnrollment)
-                .then((data) => {
-                  res.status(200);
-                  res.send(data);
-                })
-                .catch((err) => {
-                  res.send("Enrollment Failed");
-                  res.status(301);
-                });
-
-              //Adding Test Series to Student
-              Student.findByIdAndUpdate(studentId, {
-                series_enrolled: [testSeriesId],
-              });
-            })
-            .catch((err) => {
-              res.status(501);
-              res.send("Student Does not Exist");
-              next(err);
-            });
-        })
-        .catch((err) => {
-          res.status(501);
-          res.send("Test Series Does not Exist");
-          next(err);
-        });
-    } else {
-      res.send("Already Enrolled");
-    }
-  });
 
 module.exports = testSeriesRouter;

@@ -1,4 +1,5 @@
 const auth = require("../config/firebase-config");
+const Student = require("../models/student");
 
 const VerifyToken = async (req, res, next) => {
   try {
@@ -7,7 +8,10 @@ const VerifyToken = async (req, res, next) => {
     const decodeValue = await auth.verifyIdToken(token);
     if (decodeValue) {
       req.user = decodeValue;
-      return next();
+      Student.findOne({ uid: decodeValue.uid }).then((student) => {
+        req.student = student;
+        return next();
+      });
     }
   } catch (e) {
     return res.json({ message: "Not Authenticated" });

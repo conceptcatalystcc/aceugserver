@@ -21,6 +21,7 @@ const testSeriesEnrollmentsSchema = new Schema(
     },
     join_date: { type: Date, default: Date.now(), required: true },
     last_date: { type: Date, required: true },
+    cart: { type: mongoose.Types.ObjectId, required: true, ref: "Cart" },
     test_progress: [testToProgressSchema],
   },
   {

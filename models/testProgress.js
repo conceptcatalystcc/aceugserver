@@ -10,7 +10,7 @@ const answerSchema = new Schema({
 const testProgressSchema = new Schema(
   {
     test: { type: mongoose.ObjectId, required: true, ref: "Test" },
-    student: { type: mongoose.ObjectId, required: true },
+    student: { type: mongoose.ObjectId, required: true, ref: "Student" },
     testseries: { type: mongoose.ObjectId, required: true, ref: "TestSeries" },
     answer_map: { type: [answerSchema], required: true },
     score: { type: Number, required: true },
