@@ -23,7 +23,7 @@ const AlreadyEnrolled = async (req, res, next) => {
       });
     });
   } catch (e) {
-    return res.json({ message: "Internal Error" });
+    return res.json({ message: "Already Enrolled" });
   }
 };
 
