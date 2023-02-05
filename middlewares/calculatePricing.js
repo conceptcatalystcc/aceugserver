@@ -33,7 +33,7 @@ const calculatePricing = async (req, res, next) => {
 
     fetching(items).then((cartValue) => {
       console.log("Fetched");
-      console.log(cartValue);
+
       const cart = {
         testSeries: items
           .filter((item) => item.type === "Test Series")
