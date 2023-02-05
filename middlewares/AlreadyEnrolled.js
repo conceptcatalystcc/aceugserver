@@ -14,8 +14,8 @@ const AlreadyEnrolled = async (req, res, next) => {
         testseries: series,
         student: req.student._id,
       }).then((found) => {
+        console.log(found);
         if (found) {
-          console.log("Found");
           return next(new Error("Already Enrolled"));
         } else {
           return next();
@@ -23,7 +23,8 @@ const AlreadyEnrolled = async (req, res, next) => {
       });
     });
   } catch (e) {
-    return res.json({ message: "Already Enrolled" });
+    console.log(e);
+    return res.json({ message: e.toString() });
   }
 };
 

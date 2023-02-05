@@ -12,26 +12,49 @@ router.post("/register", async (req, res, next) => {
   const aspired_college = req.body.aspired_college;
   const uid = req.body.uid;
 
-  const student = {
-    email: email,
-    phone: phone,
-    name: name,
-    aspired_college: aspired_college,
-    aspired_degree: aspired_degree,
-    uid: uid,
-  };
+  Student.findOne({ phone: phone })
+    .then((foundStudent) => {
+      if (foundStudent) {
+        res.send("User already Registered");
+      } else {
+        const student = {
+          email: email,
+          phone: phone,
+          name: name,
+          aspired_college: aspired_college,
+          aspired_degree: aspired_degree,
+          uid: uid,
+        };
 
-  new Student(student)
-    .save()
-    .then((savedStudent) => {
-      console.log(savedStudent);
-      res.status(200);
-      res.send("Saved");
+        new Student(student)
+          .save()
+          .then((savedStudent) => {
+            console.log(savedStudent);
+            res.status(200);
+            res.send("Saved");
+          })
+          .catch((err) => {
+            console.log(err);
+            res.send(err);
+          });
+      }
     })
-    .catch((err) => {
-      console.log(err);
-      res.send(err);
-    });
+    .catch((error) => res.send(error));
+});
+
+router.get("/login-check/:number", (req, res, next) => {
+  console.log("User Exist Check");
+  const number = req.params.number;
+  Student.findOne({ phone: number })
+    .then((foundStudent) => {
+      if (foundStudent) {
+        res.json({ status: 1 });
+      } else {
+        console.log("User Not Found");
+        res.json({ status: 0 });
+      }
+    })
+    .catch((error) => res.send(error));
 });
 
 router.get("/testSeriesEnrolled", VerifyToken, async (req, res, next) => {
@@ -42,6 +65,10 @@ router.get("/testSeriesEnrolled", VerifyToken, async (req, res, next) => {
         res.send(enrollments);
       });
   });
+});
+
+router.get("/profile", VerifyToken, (req, res, next) => {
+  Student.findOne({ uid: req.user.uid });
 });
 
 module.exports = router;

@@ -9,8 +9,12 @@ const VerifyToken = async (req, res, next) => {
     if (decodeValue) {
       req.user = decodeValue;
       Student.findOne({ uid: decodeValue.uid }).then((student) => {
-        req.student = student;
-        return next();
+        if (student) {
+          req.student = student;
+          return next();
+        } else {
+          return res.json({ message: "Student Not Exist" });
+        }
       });
     }
   } catch (e) {
