@@ -26,8 +26,8 @@ blogRouter.route("/:page").get((req, res, next) => {
 
 blogRouter.route("/blog/:title").get((req, res, next) => {
   const title = req.params.title;
-
-  Blog.findOne({ title: title })
+  console.log(decodeURIComponent(title));
+  Blog.findOne({ title: decodeURIComponent(title) })
     .then(
       (blog) => {
         res.status = 200;

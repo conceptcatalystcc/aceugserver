@@ -14,6 +14,9 @@ const testProgressSchema = new Schema(
     testseries: { type: mongoose.ObjectId, required: true, ref: "TestSeries" },
     answer_map: { type: [answerSchema], required: true },
     score: { type: Number, required: true },
+    correct: { type: Number, required: true },
+    wrong: { type: Number, required: true },
+    unanswered: { type: Number, required: true },
     time_taken: { type: Number, required: true }, //in seconds
   },
   {

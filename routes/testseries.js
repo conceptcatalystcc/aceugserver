@@ -11,6 +11,7 @@ const testSeriesPerPage = 2;
 const mongoose = require("mongoose");
 const Question = require("../models/question");
 const VerifyToken = require("../middlewares/VerifyToken");
+const isEnrolled = require("../middlewares/isEnrolled");
 
 require("dotenv").config();
 
@@ -52,7 +53,7 @@ testSeriesRouter.route("/singletestseries/:id").get((req, res, next) => {
 //Handling Single Test
 testSeriesRouter
   .route("/test/:testSeriesId/:testId")
-  .get(VerifyToken, (req, res, next) => {
+  .get(VerifyToken, isEnrolled, (req, res, next) => {
     Test.findById(req.params.testId)
       .populate("sections")
       .populate({
@@ -109,8 +110,11 @@ testSeriesRouter
       testseries: testSeriesId,
       student: student,
       answer_map: answer_map,
-      time_taken: time,
+      time_taken: req.body.time_taken,
       score: score,
+      correct: req.body.correct,
+      wrong: req.body.wrong,
+      unanswered: req.body.unanswered,
     })
       .save()
       .then((savedProgress) => {

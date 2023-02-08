@@ -3,6 +3,7 @@ const auth = require("../config/firebase-config");
 const VerifyToken = require("../middlewares/VerifyToken");
 const Student = require("../models/student");
 const TestSeriesEnrolments = require("../models/testSeriesEnrolments");
+const TestProgress = require("../models/testProgress");
 
 router.post("/register", async (req, res, next) => {
   const name = req.body.name;
@@ -67,8 +68,19 @@ router.get("/testSeriesEnrolled", VerifyToken, async (req, res, next) => {
   });
 });
 
+router.get("/recent-tests", VerifyToken, async (req, res, next) => {
+  Student.findOne({ uid: req.user.uid }).then((student) => {
+    TestProgress.find({ student: student._id })
+      .populate("test")
+      .populate("testseries")
+      .then((allProgress) => {
+        res.send(allProgress);
+      });
+  });
+});
+
 router.get("/profile", VerifyToken, (req, res, next) => {
-  Student.findOne({ uid: req.user.uid });
+  res.send(req.student);
 });
 
 module.exports = router;

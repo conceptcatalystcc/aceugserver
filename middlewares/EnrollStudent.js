@@ -97,7 +97,7 @@ const EnrollStudent = async (req, res, next) => {
 
       Promise.all(allPs).then(() => {
         console.log("All Promises Resolved");
-        res.send("data");
+        res.send("Payment Verified Successfully");
       });
     }
   } catch (e) {
