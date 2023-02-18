@@ -172,4 +172,19 @@ testSeriesRouter.route("/test-report/:progressId").get((req, res, next) => {
     .catch((err) => next(err));
 });
 
+//Returning Single Test Progress
+testSeriesRouter
+  .route("/test-series-progress/:testSeriesId")
+  .get((req, res, next) => {
+    const testSeriesId = req.params.testSeriesId;
+    TestProgress.find({ testseries: testSeriesId })
+      .populate("test")
+      .then((progresses) => {
+        res.send(progresses);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  });
+
 module.exports = testSeriesRouter;
