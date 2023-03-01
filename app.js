@@ -31,12 +31,9 @@ const TestSection = require("./models/testSection");
 const TestProgress = require("./models/testProgress");
 
 var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
 const courseRouter = require("./routes/course");
-const progressRouter = require("./routes/progress");
 const testSeriesRouter = require("./routes/testseries");
 const studentRouter = require("./routes/student");
-const courseprogressRouter = require("./routes/courseProgress");
 const blogRouter = require("./routes/blog");
 const paymentRouter = require("./routes/payment");
 
@@ -269,10 +266,8 @@ app.use(
 );
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+
 app.use("/courses", courseRouter);
-app.use("/progress", progressRouter);
-app.use("/course-progress", courseprogressRouter);
 app.use("/testseries", testSeriesRouter);
 app.use("/student", studentRouter);
 app.use("/blogs", blogRouter);

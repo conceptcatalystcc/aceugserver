@@ -172,7 +172,7 @@ testSeriesRouter.route("/test-report/:progressId").get((req, res, next) => {
     .catch((err) => next(err));
 });
 
-//Returning Single Test Progress
+//Returning Single Test Series Progress
 testSeriesRouter
   .route("/test-series-progress/:testSeriesId")
   .get((req, res, next) => {
