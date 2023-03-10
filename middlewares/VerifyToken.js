@@ -11,6 +11,7 @@ const VerifyToken = async (req, res, next) => {
       Student.findOne({ uid: decodeValue.uid }).then((student) => {
         if (student) {
           req.student = student;
+          console.log("[+] Valid User - Next");
           return next();
         } else {
           return res.json({ message: "Student Not Exist" });

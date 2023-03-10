@@ -57,4 +57,37 @@ courseRouter.route("/course/:courseId").get((req, res, next) => {
     .catch((err) => next(err));
 });
 
+//Handling Single Course
+courseRouter.route("/attempt/:courseId").get((req, res, next) => {
+  const page = 0;
+
+  Course.findById(req.params.courseId)
+    .skip(page * coursePerPage)
+    .limit(coursePerPage)
+    .populate("instructors")
+    .populate("modules")
+    .populate({ path: "modules", populate: { path: "resources" } })
+    .populate({
+      path: "modules",
+      populate: { path: "resources", populate: { path: "lesson" } },
+    })
+    .populate({
+      path: "modules",
+      populate: { path: "resources", populate: { path: "video" } },
+    })
+    .populate({
+      path: "modules",
+      populate: { path: "resources", populate: { path: "quiz" } },
+    })
+    .then(
+      (courses) => {
+        res.status = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json(courses);
+      },
+      (err) => next(err)
+    )
+    .catch((err) => next(err));
+});
+
 module.exports = courseRouter;
