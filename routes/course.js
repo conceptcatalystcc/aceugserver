@@ -23,6 +23,7 @@ courseRouter.route("/:page").get((req, res, next) => {
     Course.find({})
       .skip(page * coursePerPage)
       .limit(coursePerPage)
+      .populate("thumbnail")
       .then(
         (courses) => {
           res.status = 200;

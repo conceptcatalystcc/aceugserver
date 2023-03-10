@@ -17,9 +17,8 @@ const courseSchema = new Schema(
       unique: true,
     },
     thumbnail: {
-      type: mongoose.Types.ObjectId,
+      type: String,
       required: true,
-      ref: "Thumbnail",
     },
     description: {
       type: String,
