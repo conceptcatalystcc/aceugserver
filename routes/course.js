@@ -6,7 +6,7 @@ const CourseProgress = require("../models/courseProgress");
 
 const Student = require("../models/student");
 const courseRouter = express.Router();
-const coursePerPage = 2;
+const coursePerPage = 20;
 const passport = require("passport");
 
 const mongoose = require("mongoose");
