@@ -7,8 +7,8 @@ const blogPerPage = 10;
 
 const mongoose = require("mongoose");
 
-blogRouter.route("/:page").get((req, res, next) => {
-  const page = req.params.page;
+blogRouter.route("/").get((req, res, next) => {
+  const page = req.query.page;
 
   Blog.find()
     .skip(page * blogPerPage)

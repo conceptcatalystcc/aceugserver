@@ -197,7 +197,7 @@ const adminOptions = {
 
     {
       resource: Question,
-
+      options: questionResourceOptions,
       features: [importExportFeature()],
     },
 
