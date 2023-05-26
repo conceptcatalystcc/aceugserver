@@ -10,10 +10,10 @@ const optionSchema = new Schema({
 const questionSchema = new Schema(
   {
     statement: { type: String, required: true },
-    explanation: { type: String },
-    pmarks: { type: Number, required: true },
-    nmarks: { type: Number },
     options: [optionSchema],
+    explanation: { type: String },
+    pmarks: { type: Number, required: true, default: 2 },
+    nmarks: { type: Number },
     difficulty: {
       type: String,
     },
