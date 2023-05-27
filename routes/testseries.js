@@ -50,27 +50,23 @@ testSeriesRouter.route("/singletestseries/:id").get((req, res, next) => {
     });
 });
 
-//Handling Single Test
 testSeriesRouter
   .route("/test/:testSeriesId/:testId")
-  .get(VerifyToken, isEnrolled, (req, res, next) => {
-    Test.findById(req.params.testId)
-      .populate("sections")
-      .populate({
-        path: "sections",
-        populate: {
-          path: "questions",
-        },
-      })
-      .then(
-        (test) => {
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.send(test);
-        },
-        (err) => next(err)
-      )
-      .catch((err) => next(err));
+  .get(VerifyToken, isEnrolled, async (req, res, next) => {
+    try {
+      const test = await Test.findById(req.params.testId)
+        .populate({
+          path: "sections",
+          populate: {
+            path: "questions",
+          },
+        })
+        .exec();
+
+      res.status(200).json(test);
+    } catch (error) {
+      next(error);
+    }
   });
 
 const calculateScore = (answer_map) => {
@@ -175,9 +171,9 @@ testSeriesRouter.route("/test-report/:progressId").get((req, res, next) => {
 //Returning Single Test Series Progress
 testSeriesRouter
   .route("/test-series-progress/:testSeriesId")
-  .get((req, res, next) => {
+  .get(VerifyToken, (req, res, next) => {
     const testSeriesId = req.params.testSeriesId;
-    TestProgress.find({ testseries: testSeriesId })
+    TestProgress.find({ testseries: testSeriesId, student: req.student._id })
       .populate("test")
       .then((progresses) => {
         res.send(progresses);
