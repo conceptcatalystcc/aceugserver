@@ -2,6 +2,7 @@
 const Student = require("../models/student");
 
 async function verifyHost(req, res, next) {
+  console.log("[+] Request Object", req);
   console.log("[+] Request from", req.hostname);
   try {
     const uid = req.user.uid; // Assuming req.user.uid contains the distributor ID of the student
