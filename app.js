@@ -28,6 +28,7 @@ const CourseEnrollments = require("./models/courseEnrollments");
 const TestSeriesEnrollments = require("./models/testSeriesEnrolments");
 const Test = require("./models/test");
 const TestSection = require("./models/testSection");
+const Distributor = require("./models/distributor");
 const TestProgress = require("./models/testProgress");
 
 var indexRouter = require("./routes/index");
@@ -36,6 +37,7 @@ const testSeriesRouter = require("./routes/testseries");
 const studentRouter = require("./routes/student");
 const blogRouter = require("./routes/blog");
 const paymentRouter = require("./routes/payment");
+const jamboreeRouter = require("./routes/jamboree");
 
 const AdminJS = require("adminjs");
 const AdminJSExpress = require("@adminjs/express");
@@ -44,6 +46,8 @@ const AdminJSMongoose = require("@adminjs/mongoose");
 const Connect = require("connect-pg-simple");
 const Lesson = require("./models/lesson");
 const Thumbnail = require("./models/thumbnail");
+const VerifyToken = require("./middlewares/VerifyToken");
+const verifyHost = require("./middlewares/verifyHost");
 
 var app = express();
 
@@ -202,6 +206,7 @@ const adminOptions = {
     },
 
     { resource: Degree },
+    { resource: Distributor },
     { resource: Thumbnail },
     { resource: Coupon },
     { resource: Cart },
@@ -266,7 +271,7 @@ app.use(
 );
 
 app.use("/", indexRouter);
-
+app.use("/jamboree", jamboreeRouter);
 app.use("/courses", courseRouter);
 app.use("/testseries", testSeriesRouter);
 app.use("/student", studentRouter);

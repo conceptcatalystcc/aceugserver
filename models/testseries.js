@@ -11,6 +11,7 @@ const testSeriesSchema = new Schema(
     subject: String,
     tags: [String],
     price: { type: Number, required: true },
+    distributors: { type: [mongoose.Types.ObjectId], ref: "Distributor" },
   },
   {
     timestamps: true,

@@ -15,6 +15,10 @@ const studentSchema = new Schema(
     series_enrolled: { type: [mongoose.ObjectId], ref: "TestSeries" },
     doubt_points: { type: Number, default: 50 },
     uid: { type: String },
+    distributor: {
+      type: mongoose.Types.ObjectId,
+      ref: "Distributor",
+    },
   },
   {
     timestamps: true,
