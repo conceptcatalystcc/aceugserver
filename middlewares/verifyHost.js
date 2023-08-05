@@ -2,8 +2,7 @@
 const Student = require("../models/student");
 
 async function verifyHost(req, res, next) {
-  console.log("[+] Request Object", req.get("origin"));
-  console.log("[+] Request from", req.hostname);
+  console.log("[+] Request from", req.get("origin"));
   try {
     const uid = req.user.uid; // Assuming req.user.uid contains the distributor ID of the student
 
@@ -15,7 +14,7 @@ async function verifyHost(req, res, next) {
     }
 
     const studentDistributorDomain = student.distributor.domain;
-    const requestHostname = req.hostname;
+    const requestHostname = req.get("origin");
 
     if (studentDistributorDomain === requestHostname) {
       // Distributor domain matches request hostname

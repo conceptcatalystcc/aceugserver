@@ -45,7 +45,7 @@ testSeriesRouter.route("/singletestseries/:id").get(async (req, res, next) => {
       return res.status(404).json({ error: "Test series not found" });
     }
 
-    // Check if req.hostname is in any of the distributors' domains of test series
+    // Check if req.get("origin") is in any of the distributors' domains of test series
     const distributors = testSeries.distributors;
     if (!distributors || distributors.length === 0) {
       return res.status(403).json({ error: "Access denied" });
@@ -54,7 +54,7 @@ testSeriesRouter.route("/singletestseries/:id").get(async (req, res, next) => {
     const allowedDomains = distributors.map(
       (distributor) => distributor.domain
     );
-    const requestDomain = req.hostname;
+    const requestDomain = req.get("origin");
 
     if (allowedDomains.some((domain) => requestDomain.includes(domain))) {
       return res.json(testSeries);
@@ -135,7 +135,6 @@ testSeriesRouter
 
 //Returning Single Test Progress
 testSeriesRouter.route("/test-report/:progressId").get((req, res, next) => {
-  console.log(req.hostname);
   TestProgress.findById(req.params.progressId)
     .populate("test")
     .populate({
