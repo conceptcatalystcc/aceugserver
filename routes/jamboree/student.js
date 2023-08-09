@@ -37,7 +37,7 @@ router.post("/register", async (req, res, next) => {
     console.log(savedStudent);
 
     // Enroll the student in the test series
-    const testSeriesId = "64cd3159022efba873decc28"; // Replace with the actual TestSeries ObjectId
+    const testSeriesId = "64c8b209f2faef6ea7b2fa44"; // Replace with the actual TestSeries ObjectId
     const enrollment = new TestSeriesEnrolments({
       student: savedStudent._id,
       testseries: testSeriesId,
