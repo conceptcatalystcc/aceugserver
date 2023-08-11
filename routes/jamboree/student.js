@@ -5,6 +5,7 @@ const Student = require("../../models/student");
 const TestSeriesEnrolments = require("../../models/testSeriesEnrolments");
 const TestProgress = require("../../models/testProgress");
 const verifyHost = require("../../middlewares/verifyHost");
+const TestSeries = require("../../models/testseries");
 
 router.post("/register", async (req, res, next) => {
   const name = req.body.name;
@@ -47,6 +48,61 @@ router.post("/register", async (req, res, next) => {
     await enrollment.save();
 
     res.status(200).send("Saved");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
+
+router.post("/enroll-paid-user", async (req, res, next) => {
+  const phoneNumber = req.body.phone;
+  const secret = req.body.secret;
+  const testSeriesId = req.body.testSeriesId;
+  const distributorIdToCheck = "64cdf3bdcbf428ce0215a933"; // ID to check
+
+  try {
+    if (secret !== "jamboree@2023xAceUG") {
+      return res.status(404).send("Endpoint does not exist");
+    }
+
+    // Find the TestSeries
+    const testSeries = await TestSeries.findOne({
+      _id: testSeriesId,
+    });
+
+    // Check if the TestSeries has the required distributor
+    if (
+      !testSeries ||
+      !testSeries.distributors.includes(distributorIdToCheck)
+    ) {
+      return res.status(404).send("TestSeries not found for the distributor");
+    }
+
+    // Check if the student is already registered
+    const foundStudent = await Student.findOne({ phone: phoneNumber });
+    if (!foundStudent) {
+      return res.status(404).send("Student not found");
+    }
+
+    // Check if the student is already enrolled
+    const existingEnrollment = await TestSeriesEnrolments.findOne({
+      student: foundStudent._id,
+      testseries: testSeriesId,
+    });
+    if (existingEnrollment) {
+      return res.send("Student is already enrolled");
+    }
+
+    // Enroll the student in the test series
+    const enrollment = new TestSeriesEnrolments({
+      student: foundStudent._id,
+      testseries: testSeriesId,
+      last_date: new Date(), // Set the last_date as per your requirements
+    });
+
+    await enrollment.save();
+
+    res.status(200).send("Enrolled successfully");
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
