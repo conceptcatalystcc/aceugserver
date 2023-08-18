@@ -20,6 +20,7 @@ const Degree = require("./models/degree");
 const thumbnail = require("./models/thumbnail");
 const Coupon = require("./models/coupons");
 const Cart = require("./models/cart");
+const User = require("./models/user");
 
 const Module = require("./models/modules");
 const Blog = require("./models/blog");
@@ -207,6 +208,7 @@ const adminOptions = {
 
     { resource: Degree },
     { resource: Distributor },
+    { resource: User },
     { resource: Thumbnail },
     { resource: Coupon },
     { resource: Cart },
