@@ -39,6 +39,7 @@ const studentRouter = require("./routes/student");
 const blogRouter = require("./routes/blog");
 const paymentRouter = require("./routes/payment");
 const jamboreeRouter = require("./routes/jamboree");
+const cmsRouter = require("./routes/cms");
 
 const AdminJS = require("adminjs");
 const AdminJSExpress = require("@adminjs/express");
@@ -279,5 +280,6 @@ app.use("/testseries", testSeriesRouter);
 app.use("/student", studentRouter);
 app.use("/blogs", blogRouter);
 app.use("/payment", paymentRouter);
+app.use("/cms", cmsRouter);
 
 module.exports = app;

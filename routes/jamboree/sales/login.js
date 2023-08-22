@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const Student = require("../../../models/student");
 const User = require("../../../models/user"); // Replace with the actual path to your User model
 const mongoose = require("mongoose");
-const verifySalesToken = require("../../../middlewares/verifySalesToken");
+const verifyUserToken = require("../../../middlewares/verifyUserToken");
 const router = express.Router();
 
 router.post("/login", async (req, res) => {
@@ -32,7 +32,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/all-enrollments", verifySalesToken, async (req, res) => {
+router.get("/all-enrollments", verifyUserToken, async (req, res) => {
   const distributorId = req.query.distributorId; // Assuming you're sending distributorId as a query parameter
 
   try {

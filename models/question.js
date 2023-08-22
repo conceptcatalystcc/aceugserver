@@ -19,6 +19,10 @@ const questionSchema = new Schema(
     },
     tags: [String],
     sections: [String],
+    user_created: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+    },
   },
   {
     timestamps: true,
