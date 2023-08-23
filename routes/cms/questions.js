@@ -24,35 +24,42 @@ router.post("/questions", async (req, res) => {
 
 // Retrieve questions with pagination
 router.get("/questions", async (req, res) => {
-  const page = parseInt(req.query.page) || 1; // Get the page number from query parameter
-  const limit = 20; // Number of questions per page
-
   try {
-    // Count total number of questions
-    const totalQuestions = await Question.countDocuments();
+    const { page, statement, explanation, options, pmarks, nmarks } = req.query;
+    const perPage = 10; // You can adjust this as needed
 
-    // Calculate total number of pages based on limit
-    const totalPages = Math.ceil(totalQuestions / limit);
+    const query = {};
 
-    // Ensure page number is within valid range
-    if (page < 1 || page > totalPages) {
-      return res.status(400).json({ message: "Invalid page number" });
+    if (statement) {
+      query.statement = { $regex: statement, $options: "i" };
     }
 
-    // Calculate skip value based on current page and limit
-    const skip = (page - 1) * limit;
+    if (explanation) {
+      query.explanation = { $regex: explanation, $options: "i" };
+    }
 
-    // Retrieve questions with pagination and sort by creation date in descending order
-    const questions = await Question.find()
-      .sort({ createdAt: -1 }) // Sort by creation date in descending order
-      .skip(skip)
-      .limit(limit);
+    if (options) {
+      query["options.value"] = { $regex: options, $options: "i" };
+    }
 
-    res.json({
-      questions,
-      currentPage: page,
-      totalPages,
-    });
+    if (pmarks) {
+      query.pmarks = parseInt(pmarks);
+    }
+
+    if (nmarks) {
+      query.nmarks = parseInt(nmarks);
+    }
+
+    const totalQuestions = await Question.countDocuments(query);
+    const totalPages = Math.ceil(totalQuestions / perPage);
+
+    const questions = await Question.find(query)
+      .skip((page - 1) * perPage)
+      .limit(perPage)
+      .sort({ createdAt: -1 }) // Assuming you want to sort by creation date
+      .populate("user_created", "username"); // Populate user_created field
+
+    res.status(200).json({ questions, totalPages });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
