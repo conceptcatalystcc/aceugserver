@@ -1,0 +1,69 @@
+router.get("/all-enrollments", verifyUserToken, async (req, res) => {
+  const distributorId = req.query.distributorId; // Assuming you're sending distributorId as a query parameter
+
+  try {
+    const pipeline = [
+      {
+        $match: {
+          distributor: mongoose.Types.ObjectId(distributorId),
+        },
+      },
+      {
+        $lookup: {
+          from: "testseriesenrollments", // Replace with the actual collection name
+          localField: "_id",
+          foreignField: "student",
+          as: "enrollments",
+        },
+      },
+      {
+        $unwind: "$enrollments",
+      },
+      {
+        $lookup: {
+          from: "testseries", // Replace with the actual collection name
+          localField: "enrollments.testseries",
+          foreignField: "_id",
+          as: "enrollments.testseries",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          name: 1,
+          phone: 1,
+          enrolments: {
+            testseriesname: {
+              $arrayElemAt: ["$enrollments.testseries.name", 0],
+            },
+            createdAt: "$enrollments.createdAt",
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$name",
+          phone: { $first: "$phone" },
+          enrollments: {
+            $push: "$enrolments",
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          phone: 1,
+          studentname: "$_id",
+          enrollments: 1,
+        },
+      },
+    ];
+
+    const studentsWithEnrollments = await Student.aggregate(pipeline);
+
+    res.status(200).json(studentsWithEnrollments);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});

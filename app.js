@@ -39,6 +39,7 @@ const studentRouter = require("./routes/student");
 const blogRouter = require("./routes/blog");
 const paymentRouter = require("./routes/payment");
 const jamboreeRouter = require("./routes/jamboree");
+const aceclatRouter = require("./routes/aceclat");
 const cmsRouter = require("./routes/cms");
 
 const AdminJS = require("adminjs");
@@ -276,6 +277,7 @@ app.use(
 
 app.use("/", indexRouter);
 app.use("/jamboree", jamboreeRouter);
+app.use("/aceclat", aceclatRouter);
 app.use("/courses", courseRouter);
 app.use("/testseries", testSeriesRouter);
 app.use("/student", studentRouter);
