@@ -45,9 +45,19 @@ router.post("/register", async (req, res, next) => {
       last_date: new Date(), // Set the last_date as per your requirements
     });
 
-    await enrollment.save();
-    console.log("Enrolled in Test Series", testSeriesId);
-    res.status(200).send("Saved");
+    try {
+      await enrollment.save();
+      console.log("Enrolled in Test Series", testSeriesId);
+      res.status(200).send("Saved");
+    } catch (error) {
+      console.error("Enrollment failed:", error);
+      res
+        .status(500)
+        .json({
+          error: "Registration and enrollment failed",
+          details: error.message,
+        });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
