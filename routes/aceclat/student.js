@@ -46,7 +46,7 @@ router.post("/register", async (req, res, next) => {
     });
 
     await enrollment.save();
-
+    console.log("Enrolled in Test Series", testSeriesId);
     res.status(200).send("Saved");
   } catch (error) {
     console.log(error);
