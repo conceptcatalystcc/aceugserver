@@ -37,15 +37,19 @@ router.post("/register", async (req, res, next) => {
     const savedStudent = await new Student(student).save();
     console.log(savedStudent);
 
-    // Enroll the student in the test series
-    const testSeriesId = "6508516a0e1569457181eaae"; // Replace with the actual TestSeries ObjectId
-    const enrollment = new TestSeriesEnrolments({
-      student: savedStudent._id,
-      testseries: testSeriesId,
-      last_date: new Date(), // Set the last_date as per your requirements
-    });
+    // Check if testSeriesId is provided in the request
+    if (req.body.testSeriesId) {
+      const testSeriesId = req.body.testSeriesId; // Use the provided testSeriesId
 
-    await enrollment.save();
+      // Enroll the student in the test series
+      const enrollment = new TestSeriesEnrolments({
+        student: savedStudent._id,
+        testseries: testSeriesId,
+        last_date: new Date(), // Set the last_date as per your requirements
+      });
+
+      await enrollment.save();
+    }
 
     res.status(200).send("Saved");
   } catch (error) {
