@@ -138,13 +138,11 @@ router.get(
   VerifyToken2,
   verifyHost,
   async (req, res, next) => {
-    Student.findOne({ uid: req.user.uid }).then((student) => {
-      TestSeriesEnrolments.find({ student: student._id })
-        .populate("testseries")
-        .then((enrollments) => {
-          res.send(enrollments);
-        });
-    });
+    TestSeriesEnrolments.find({ student: req.student._id })
+      .populate("testseries")
+      .then((enrollments) => {
+        res.send(enrollments);
+      });
   }
 );
 
@@ -153,14 +151,13 @@ router.get(
   VerifyToken2,
   verifyHost,
   async (req, res, next) => {
-    Student.findOne({ uid: req.user.uid }).then((student) => {
-      TestProgress.find({ student: student._id })
-        .populate("test")
-        .populate("testseries")
-        .then((allProgress) => {
-          res.send(allProgress);
-        });
-    });
+    TestProgress.find({ student: req.student._id })
+      .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+      .populate("test")
+      .populate("testseries")
+      .then((allProgress) => {
+        res.send(allProgress);
+      });
   }
 );
 

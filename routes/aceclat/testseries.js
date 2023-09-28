@@ -150,6 +150,7 @@ testSeriesRouter.route("/test-report/:progressId").get((req, res, next) => {
       (progress) => {
         //Fetching 50 latest progress reports for this test
         TestProgress.find({ test: progress.test._id })
+          .sort({ createdAt: -1 })
           .limit(50)
           .then((latest_reports) => {
             // console.log(latest_reports);
@@ -169,6 +170,7 @@ testSeriesRouter
   .get((req, res, next) => {
     const testSeriesId = req.params.testSeriesId;
     TestProgress.find({ testseries: testSeriesId, student: req.student._id })
+      .sort({ createdAt: -1 })
       .populate("test")
       .then((progresses) => {
         res.send(progresses);
